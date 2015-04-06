@@ -1,16 +1,11 @@
 #include "Token.h"
 
-Token::Token(string v, int t)
+Token::Token(const string v, const int t)
 {
 	value = v;
 	type = t;
 }
 
-
-Token::~Token()
-{
-}
-
 void Token::print(){
-	cout << "Token: " << value << "\tType: " << type;
+	cout << "Token: " << value << "\tType: " << type << "\n";
 }

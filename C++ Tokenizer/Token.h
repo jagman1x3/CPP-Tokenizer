@@ -3,12 +3,12 @@
 #include <string>
 using namespace std;
 
+
 class Token
 {
 public:
 	int type;
 	string value;
-	Token(string v, int t);
-	~Token();
+	Token(const string v, const int t);
 	void print();
 };
