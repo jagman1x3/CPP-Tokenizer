@@ -7,5 +7,5 @@ Token::Token(const string v, const int t)
 }
 
 void Token::print(){
-	cout << "Token: " << value << "\tType: " << type << "\n";
+	cout << "Token: " << value << "\tType: " << type << endl;
 }

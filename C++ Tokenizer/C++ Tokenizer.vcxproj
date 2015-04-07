@@ -11,11 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Token.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Token.cpp" />
     <ClCompile Include="Tokenizer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C++ Tokenizer.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{49CBA11E-7531-42EE-BE7E-C2A039646900}</ProjectGuid>
