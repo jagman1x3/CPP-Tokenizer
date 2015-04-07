@@ -3,12 +3,13 @@
 #include <set>
 #include <algorithm>
 #include <fstream>
+#include <vector>
 #include "Token.h"
 
 using namespace std;
 
 const set<char> SINGLE_SYMBOLS = { '!', '%', '&', '(', ')', '*', '+', ',', '-', '-', '/', ';', '<', '=', '>', '{', '|', '}', '~', 
-									'.', ',', ':', '\'', '"', '?', '[', ']'};
+									'.', ',', ':', '\'', '"', '?', '[', ']', '#'};
 const set<string> DOUBLE_SYMBOLS = { "!=", "&&", "<<", "<=", "==", ">=", ">>", "||", "::", "+=", "-=", "*=", "/", "%=", "&=", "^=",
 									"<<=", ">>=", "->", "->*", ".*"};
 const set<string> KEYWORDS = { "alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand", "bitor", "bool", "break", "case", 
@@ -19,9 +20,9 @@ const set<string> KEYWORDS = { "alignas", "alignof", "and", "and_eq", "asm", "au
 	"static", "static_assert", "static_cast", "struct", "switch", "template", "this", "thread_local", "throw", "true", "try", "typedef",
 	"typeid", "typename", "union", "unsigned", "using", "virtual", "void", "volatile", "wchar_t", "while", "xor", "xor_eq" };
 int UNKNOWN = 0, IDENT = 298, INTEGER = 299;
-//int tokenIndex;
 const int MAX_SYMBOL_SIZE = 3;
 map<string, int> tokenMap;
+vector<Token> tokens;
 
 void makeTokenMap(){
 	int code = 300;
@@ -55,46 +56,29 @@ int getType(const string s){
 }
 
 int main(int argc, char** argv){
-
-	//Token* t = new Token("test", 1);
-	//t->print();
-	//for (int i = 0; i < KEYWORDS.size(); i++)
-	//{
-	//	cout << "Keyword " << i << ":\t" << KEYWORDS[i] << endl;
-	//}
-
-	//for (set<string>::iterator i = KEYWORDS.begin(); i != KEYWORDS.end(); i++){
-	//	string x = *i;
-	//	cout << x << endl;
-	//}
 	
+	cout << "Enter a filename." << endl;
+	string filename;
+	cin >> filename;
+	cin.ignore(100, '\n');
 
-	ifstream is("C:\\Users\\Jordan\\workspace\\Tokenizer\\src\\test.txt");
+	ifstream is(filename);
 	if (!is){
-		cout << "Couldn't open the file." << endl;
-		return 1;
+		cout << "Error: Couldn't open the file." << endl;
+		cin.ignore();
+		return 2;
 	}
 
+	makeTokenMap();
+
 	char c;
-	while (is.get(c)){
-		while (isspace(c)){
-			is.get(c);
-		}
+	while (is >> c){
 		string str;
 		int tokenType = UNKNOWN;
-		//if (c == '\''){
-		//	str += c;
-		//	is.get(c);
-		//	while (c != '\'') {
-		//		str += c;
-		//		is.get(c);
-		//	}
-		//	str += c;
-		//}
 		if (isalpha(c)){
 			str += c;
 			is.get(c);
-			while (isalnum(c)){
+			while (isalnum(c) || c == '_'){
 				str += c;
 				is.get(c);
 			}
@@ -110,7 +94,6 @@ int main(int argc, char** argv){
 			is.unget();
 			tokenType = INTEGER;
 		}
-
 		else if (isSingleSymbol(c)){
 			str += c;
 			for (int j = 0; j < MAX_SYMBOL_SIZE - 1; j++){
@@ -130,22 +113,23 @@ int main(int argc, char** argv){
 			}
 		}
 
-
-
 		if (str.empty()){
 			continue;
 		}
 
-		//cout << str << endl;
+		if (tokenType != INTEGER){
+			tokenType = getType(str);
+		}
+		Token* token = new Token(str, tokenType);
+		tokens.push_back(*token);
+
 	}
-
-	makeTokenMap();
-	//map<string, int>::iterator it;
-	//for (it = tokenMap.begin(); it != tokenMap.end(); ++it){
-	//	cout << it->first << '\t' << it->second << endl;
-	//}
-
+	
+	for (int i = 0; i < tokens.size(); i++){
+		cout << tokens[i].value << "\t\t" << tokens[i].type << endl;
+	}
 	cin.ignore();
 	return 0;
-}
+}   
+
 
